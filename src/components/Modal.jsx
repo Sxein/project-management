@@ -1,14 +1,22 @@
-import { useImperativeHandle } from "react";
+import { useImperativeHandle, useRef } from "react";
 import { createPortal } from "react-dom";
 
-export default function Modal({ children }, ref) {
+export default function Modal({ children, buttonCaption, ref }) {
+  const dialog = useRef();
   useImperativeHandle(ref, () => {
     return {
-      open() {},
+      open() {
+        dialog.current.showModal();
+      },
     };
   });
   return createPortal(
-    <dialog>{children}</dialog>,
+    <dialog ref={dialog}>
+      {children}
+      <form action="dialog">
+        <button>[{buttonCaption}]</button>
+      </form>
+    </dialog>,
     document.getElementById("modal-root")
   );
 }
